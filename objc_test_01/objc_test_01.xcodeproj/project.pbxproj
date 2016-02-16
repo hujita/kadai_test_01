@@ -12,6 +12,9 @@
 		96BB89F91C72EB5A00223680 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96BB89F81C72EB5A00223680 /* Images.xcassets */; };
 		96BB89FC1C72EB5A00223680 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96BB89FA1C72EB5A00223680 /* MainMenu.xib */; };
 		96BB8A081C72EB5A00223680 /* objc_test_01Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96BB8A071C72EB5A00223680 /* objc_test_01Tests.m */; };
+		96BB8A121C72F0B000223680 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BB8A111C72F0B000223680 /* SDL2.framework */; };
+		96BB8A141C72F0BA00223680 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BB8A131C72F0BA00223680 /* SDL2_image.framework */; };
+		96BB8A171C72F1A100223680 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 96BB8A161C72F1A100223680 /* background.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +38,9 @@
 		96BB8A011C72EB5A00223680 /* objc_test_01Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = objc_test_01Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96BB8A061C72EB5A00223680 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96BB8A071C72EB5A00223680 /* objc_test_01Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = objc_test_01Tests.m; sourceTree = "<group>"; };
+		96BB8A111C72F0B000223680 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Volumes/SDL2/SDL2.framework; sourceTree = "<group>"; };
+		96BB8A131C72F0BA00223680 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../Volumes/SDL2_image/SDL2_image.framework; sourceTree = "<group>"; };
+		96BB8A161C72F1A100223680 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +48,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96BB8A121C72F0B000223680 /* SDL2.framework in Frameworks */,
+				96BB8A141C72F0BA00223680 /* SDL2_image.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +66,8 @@
 		96BB89E51C72EB5A00223680 = {
 			isa = PBXGroup;
 			children = (
+				96BB8A131C72F0BA00223680 /* SDL2_image.framework */,
+				96BB8A111C72F0B000223680 /* SDL2.framework */,
 				96BB89F01C72EB5A00223680 /* objc_test_01 */,
 				96BB8A041C72EB5A00223680 /* objc_test_01Tests */,
 				96BB89EF1C72EB5A00223680 /* Products */,
@@ -76,6 +86,7 @@
 		96BB89F01C72EB5A00223680 /* objc_test_01 */ = {
 			isa = PBXGroup;
 			children = (
+				96BB8A151C72F15500223680 /* Resources */,
 				96BB89F31C72EB5A00223680 /* AppDelegate.h */,
 				96BB89F41C72EB5A00223680 /* AppDelegate.m */,
 				96BB89F81C72EB5A00223680 /* Images.xcassets */,
@@ -109,6 +120,14 @@
 				96BB8A061C72EB5A00223680 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		96BB8A151C72F15500223680 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				96BB8A161C72F1A100223680 /* background.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -192,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96BB89F91C72EB5A00223680 /* Images.xcassets in Resources */,
+				96BB8A171C72F1A100223680 /* background.png in Resources */,
 				96BB89FC1C72EB5A00223680 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,6 +346,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Volumes/SDL2,
+					/Volumes/SDL2_image,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/System/Library/Frameworks/SDL2.framework/Headers/,
+					/System/Library/Frameworks/SDL2_image.framework/Headers/,
+				);
 				INFOPLIST_FILE = objc_test_01/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -337,6 +368,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Volumes/SDL2,
+					/Volumes/SDL2_image,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/System/Library/Frameworks/SDL2.framework/Headers/,
+					/System/Library/Frameworks/SDL2_image.framework/Headers/,
+				);
 				INFOPLIST_FILE = objc_test_01/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
