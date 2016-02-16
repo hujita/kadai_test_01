@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>977CAE17-4E72-4EAC-9D33-3596FE09D131</string>
+	<key>IDESourceControlProjectName</key>
+	<string>animation_test_01</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>20923AD7D962417CCAB7C11FFE660799671660E6</key>
+		<string>https://github.com/hujita/kadai_test_01.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>animation_test_01/animation_test_01.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>20923AD7D962417CCAB7C11FFE660799671660E6</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/hujita/kadai_test_01.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>20923AD7D962417CCAB7C11FFE660799671660E6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>20923AD7D962417CCAB7C11FFE660799671660E6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>kadai_test_01</string>
+		</dict>
+	</array>
+</dict>
+</plist>
