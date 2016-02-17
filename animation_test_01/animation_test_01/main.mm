@@ -22,7 +22,8 @@ SDL_Surface* particle_image = NULL;         /* 粒子の画像 */
 
 
 /* 粒子 */
-typedef struct {
+/* typedef struct {...}のように省略可能 */
+typedef struct Particle {
     double x, y;        /* 座標 */
     double vx, vy;      /* 速度 */
     int alive;          /* 0: 死亡, 1: 生存 */
