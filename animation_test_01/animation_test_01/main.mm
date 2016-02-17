@@ -218,11 +218,14 @@ void MainLoop(void)
         /* 1秒間に60回Updateされるようにする */
         if (SDL_GetTicks() >= next_frame) {
             Update();
-            /* 時間がまだあるときはDrawする */
-            if (SDL_GetTicks() < next_frame + wait)
+            /* 時間がまだあるときは */
+            if (SDL_GetTicks() < next_frame + wait) {
+                /* Drawする */
                 Draw();
+                /* 休ませる */
+                SDL_Delay(next_frame + wait - SDL_GetTicks());
+            }
             next_frame += wait;
-            SDL_Delay(0);
         }
     }
 }
