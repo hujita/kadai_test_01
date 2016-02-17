@@ -223,6 +223,8 @@ void MainLoop(void)
                 /* Drawする */
                 Draw();
                 /* 休ませる */
+                /* これをifの外に出したらなぜか動かなくなる */
+                /* たまに止まる */
                 SDL_Delay(next_frame + wait - SDL_GetTicks());
             }
             next_frame += wait;
