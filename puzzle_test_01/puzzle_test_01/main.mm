@@ -18,7 +18,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <stdio.h>
-
+#include <string>
+#include <string.h>
+#include <boost/format.hpp>
 
 /* 入力データ */
 typedef struct {
@@ -40,6 +42,7 @@ SDL_Surface* puzzle_block = NULL;           /* ブロック */
 
 SDL_Surface* word_main = NULL;              /* メインテキスト */
 SDL_Surface* word_sub = NULL;               /* サブテキスト */
+SDL_Surface* word_input = NULL;             /* 入力内容テキスト */
 SDL_Surface* word_0 = NULL;                 /* テキスト */
 SDL_Surface* word_1 = NULL;                 /* テキスト */
 SDL_Surface* word_2 = NULL;                 /* テキスト */
@@ -50,6 +53,7 @@ TTF_Font* font;                             /* フォント */
 SDL_Color white = {0xff, 0xff, 0xff};       /* 色 */
 SDL_Rect destrect_main_word = { 330, 210 }; /* コメント位置 */
 SDL_Rect destrect_sub_word = { 330, 310 };  /* サブコメント位置 */
+SDL_Rect destrect_input_word = { 330, 410 };  /* 入力内容表示位置 */
 
 int view_type = 0;                          /* 0:TOP, 1:Play */
 int config_phase = 0;                       /* 設定の段階 */
@@ -116,33 +120,46 @@ void UpdateTop(void)
 {
 }
 
+/* PLAY画面更新 */
+void UpdatePlay(void)
+{
+}
+
 /* 描画する */
 void Draw(void)
 {
 
     /* 背景を描画する */
     SDL_BlitSurface(background_image, NULL, screen, NULL);
-    /* メインテキスト描画 */
-    SDL_BlitSurface(word_main, NULL, screen, &destrect_main_word);
-    /* サブテキスト描画 */
-    switch (config_phase) {
-        case 0:
-            word_sub = word_0;
-            break;
-        case 1:
-            word_sub = word_1;
-            break;
-        case 2:
-            word_sub = word_2;
-            break;
-        case 3:
-            word_sub = word_3;
-            break;
-        case 4:
-            word_sub = word_4;
-            break;
+    if (view_type == TOP_VIEW) {
+        /* メインテキスト描画 */
+        SDL_BlitSurface(word_main, NULL, screen, &destrect_main_word);
+        /* サブテキスト描画 */
+        switch (config_phase) {
+            case 0:
+                word_sub = word_0;
+                break;
+            case 1:
+                word_sub = word_1;
+                break;
+            case 2:
+                word_sub = word_2;
+                break;
+            case 3:
+                word_sub = word_3;
+                break;
+            case 4:
+                word_sub = word_4;
+                break;
+        }
+        SDL_BlitSurface(word_sub, NULL, screen, &destrect_sub_word);
+    
+        /* 入力内容表示テキスト描画 */
+        char buf[50];
+        sprintf(buf, "行数：%d  列数：%d  ブロック：%d  連鎖：%d", line, row, type, chain);
+        word_input = TTF_RenderUTF8_Blended(font, buf, white);
+        SDL_BlitSurface(word_input, NULL, screen, &destrect_input_word);
     }
-    SDL_BlitSurface(word_sub, NULL, screen, &destrect_sub_word);
     
     /* ブロックを描画する */
     //SDL_BlitSurface(puzzle_block, NULL, screen, &destrect);
@@ -200,14 +217,14 @@ int Initialize(void)
     word_main = TTF_RenderUTF8_Blended(font, "パズルの設定(1~9で入力)", white);
     word_0 = TTF_RenderUTF8_Blended(font, "行数を指定してください", white);
     word_1 = TTF_RenderUTF8_Blended(font, "列数を指定してください", white);
-    word_2 = TTF_RenderUTF8_Blended(font, "ブロックのの種類数", white);
-    word_3 = TTF_RenderUTF8_Blended(font, "ブロックを繋げるべき数", white);
+    word_2 = TTF_RenderUTF8_Blended(font, "ブロックの種類数を指定してください", white);
+    word_3 = TTF_RenderUTF8_Blended(font, "ブロックを繋げるべき数を指定してください", white);
     word_4 = TTF_RenderUTF8_Blended(font, "Enter:ゲーム開始 / 右Shift:TOPに戻る / ESC:終了", white);
 
     return 0;
 }
 
-void ConfigTopIn(int n){
+void ConfigTopInput(int n){
     switch (config_phase){
         case 0:
             line = n;
@@ -222,6 +239,7 @@ void ConfigTopIn(int n){
             chain = n;
             break;
     }
+    ++config_phase;
 }
 
 void ConfigTop(SDL_Event event){
@@ -255,7 +273,7 @@ void ConfigTop(SDL_Event event){
             value = 9;
             break;
     }
-    ConfigTopIn(value);
+    ConfigTopInput(value);
     ++config_phase;
 }
 
@@ -274,42 +292,44 @@ void MainLoop(void)
             if ((event.type == SDL_QUIT) ||
                 (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE))
                 return;
-            if (event.type == SDL_KEYDOWN){
-                int value = 0;
+            /* TOP画面でのキー入力 */
+            if (view_type == TOP_VIEW && event.type == SDL_KEYDOWN){
                 switch (event.key.keysym.sym) {
                     case SDLK_1:
-                        value = 1;
+                        ConfigTopInput(1);
                         break;
                     case SDLK_2:
-                        value = 2;
+                        ConfigTopInput(2);
                         break;
                     case SDLK_3:
-                        value = 3;
+                        ConfigTopInput(3);
                         break;
                     case SDLK_4:
-                        value = 4;
+                        ConfigTopInput(4);
                         break;
                     case SDLK_5:
-                        value = 5;
+                        ConfigTopInput(5);
                         break;
                     case SDLK_6:
-                        value = 6;
+                        ConfigTopInput(6);
                         break;
                     case SDLK_7:
-                        value = 7;
+                        ConfigTopInput(7);
                         break;
                     case SDLK_8:
-                        value = 8;
+                        ConfigTopInput(8);
                         break;
                     case SDLK_9:
-                        value = 9;
+                        ConfigTopInput(9);
                         break;
+                    case SDLK_RETURN:
+                        if (config_phase == 4) {
+                            view_type = PLAY_VIEW;
+                            break;
+                        }
                 }
-                ConfigTopIn(value);
-                ++config_phase;
-                fprintf(stderr, "画面の初期化に失敗しました：%d\n", config_phase);
             }
-               // ConfigTop(event);
+            /* 全画面共通のキー入力 */
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RSHIFT){
                 line = 0;
                 row = 0;
@@ -323,6 +343,8 @@ void MainLoop(void)
         if (SDL_GetTicks() >= next_frame) {
             if (view_type == TOP_VIEW) {
                 UpdateTop();
+            } else if (view_type == PLAY_VIEW) {
+                UpdatePlay();
             };
             //Update();
             /* 時間がまだあるときはDrawする */
