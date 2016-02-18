@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		96B7E26C1C75509600C6340F /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96B7E26B1C75509600C6340F /* SDL2.framework */; };
+		96B7E26E1C75509B00C6340F /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96B7E26D1C75509B00C6340F /* SDL2_image.framework */; };
 		96F64DDF1C743E4700496683 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F64DDE1C743E4700496683 /* AppDelegate.m */; };
 		96F64DE11C743E4700496683 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96F64DE01C743E4700496683 /* main.mm */; };
 		96F64DE31C743E4700496683 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96F64DE21C743E4700496683 /* Images.xcassets */; };
 		96F64DE61C743E4700496683 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96F64DE41C743E4700496683 /* MainMenu.xib */; };
 		96F64DF21C743E4700496683 /* key_test_01Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F64DF11C743E4700496683 /* key_test_01Tests.m */; };
-		96F64DFC1C743E7200496683 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F64DFB1C743E7200496683 /* SDL2.framework */; };
-		96F64DFE1C743E7600496683 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96F64DFD1C743E7600496683 /* SDL2_image.framework */; };
 		96F64E011C74430D00496683 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F64E001C74430D00496683 /* background.png */; };
 		96F64E031C74431C00496683 /* onpu.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F64E021C74431C00496683 /* onpu.png */; };
 /* End PBXBuildFile section */
@@ -29,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		96B7E26B1C75509600C6340F /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Volumes/SDL2/SDL2.framework; sourceTree = "<group>"; };
+		96B7E26D1C75509B00C6340F /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../Volumes/SDL2_image/SDL2_image.framework; sourceTree = "<group>"; };
 		96F64DD81C743E4700496683 /* key_test_01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = key_test_01.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96F64DDC1C743E4700496683 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96F64DDD1C743E4700496683 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -39,8 +41,6 @@
 		96F64DEB1C743E4700496683 /* key_test_01Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = key_test_01Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		96F64DF01C743E4700496683 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96F64DF11C743E4700496683 /* key_test_01Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = key_test_01Tests.m; sourceTree = "<group>"; };
-		96F64DFB1C743E7200496683 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Volumes/SDL2/SDL2.framework; sourceTree = "<group>"; };
-		96F64DFD1C743E7600496683 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../Volumes/SDL2_image/SDL2_image.framework; sourceTree = "<group>"; };
 		96F64E001C74430D00496683 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		96F64E021C74431C00496683 /* onpu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onpu.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,8 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96F64DFE1C743E7600496683 /* SDL2_image.framework in Frameworks */,
-				96F64DFC1C743E7200496683 /* SDL2.framework in Frameworks */,
+				96B7E26C1C75509600C6340F /* SDL2.framework in Frameworks */,
+				96B7E26E1C75509B00C6340F /* SDL2_image.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,8 +68,8 @@
 		96F64DCF1C743E4700496683 = {
 			isa = PBXGroup;
 			children = (
-				96F64DFD1C743E7600496683 /* SDL2_image.framework */,
-				96F64DFB1C743E7200496683 /* SDL2.framework */,
+				96B7E26D1C75509B00C6340F /* SDL2_image.framework */,
+				96B7E26B1C75509600C6340F /* SDL2.framework */,
 				96F64DDA1C743E4700496683 /* key_test_01 */,
 				96F64DEE1C743E4700496683 /* key_test_01Tests */,
 				96F64DD91C743E4700496683 /* Products */,
@@ -444,6 +444,7 @@
 				96F64DF71C743E4700496683 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		96F64DF81C743E4700496683 /* Build configuration list for PBXNativeTarget "key_test_01Tests" */ = {
 			isa = XCConfigurationList;
@@ -452,6 +453,7 @@
 				96F64DFA1C743E4700496683 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
