@@ -60,6 +60,10 @@ public class BlockControl : MonoBehaviour {
 	private Vector3 position_offset_initial = Vector3.zero;
 	public Vector3 position_offset = Vector3.zero;
 
+	public float vanish_timer = -1.0f;
+	public Block.DIR4 slide_dir = Block.DIR4.NONE;
+	public float step_timer = 0.0f;
+
 	// Use this for initialization
 	void Start () {
 		this.setColor (this.color);
@@ -72,11 +76,28 @@ public class BlockControl : MonoBehaviour {
 		this.block_root.unprojectMousePosition (out mouse_position, Input.mousePosition);
 		Vector2 mouse_position_xy = new Vector2 (mouse_position.x, mouse_position.y);
 
+		this.step_timer += Time.deltaTime;
+		float slide_time = 0.2f;
+
+		if (this.next_step == Block.STEP.NONE) {
+			switch (this.step) {
+			case Block.STEP.SLIDE:
+				if (this.step_timer >= slide_time) {
+					if (this.vanish_timer == 0.0f) {
+						this.next_step = Block.STEP.VACANT;
+					} else {
+						this.next_step = Block.STEP.IDLE;
+					}
+				}
+				break;
+			}
+		}
+
 		while (this.next_step != Block.STEP.NONE) {
 			this.step = this.next_step;
 			this.next_step = Block.STEP.NONE;
 
-			switch(this.step) {
+			switch (this.step) {
 			case Block.STEP.IDLE:
 				this.position_offset = Vector3.zero;
 				this.transform.localScale = Vector3.one * 1.0f;
@@ -88,12 +109,27 @@ public class BlockControl : MonoBehaviour {
 				this.position_offset = Vector3.zero;
 				this.transform.localScale = Vector3.one * 1.0f;
 				break;
+			case Block.STEP.VACANT:
+				this.position_offset = Vector3.zero;
+				break;
 			}
-
-			Vector3 position = BlockRoot.calcBlockPosition(this.i_pos) + this.position_offset;
-
-			this.transform.position = position;
+			this.step_timer = 0.0f;
 		}
+
+		switch(this.step) {
+		case Block.STEP.GRABBED:
+			this.slide_dir = this.calcSlideDir (mouse_position_xy);
+			break;
+		case Block.STEP.SLIDE:
+			float rate = this.step_timer / slide_time;
+			rate = Mathf.Min (rate, 1.0f);
+			rate = Mathf.Sin (rate*Mathf.PI / 2.0f);
+			this.position_offset = Vector3.Lerp (this.position_offset_initial, Vector3.zero, rate);
+			break;
+		}
+		Vector3 position = BlockRoot.calcBlockPosition(this.i_pos) + this.position_offset;
+
+		this.transform.position = position;
 	}
 
 	public void setColor(Block.COLOR color) {
@@ -160,5 +196,57 @@ public class BlockControl : MonoBehaviour {
 		} while(false);
 
 		return(ret);
+	}
+
+
+	public Block.DIR4 calcSlideDir(Vector2 mouse_position) {
+		Block.DIR4 dir = Block.DIR4.NONE;
+		Vector2 v = mouse_position - new Vector2 (this.transform.position.x, this.transform.position.y);
+
+		if (v.magnitude > 0.1f) {
+			if(v.y > v.x) {
+				if (v.y > -v.x) {
+					dir = Block.DIR4.UP;
+				} else {
+					dir = Block.DIR4.LEFT;
+				}
+			} else {
+				if (v.y > -v.x) {
+					dir = Block.DIR4.RIGHT;
+				} else {
+					dir = Block.DIR4.DOWN;
+				}
+			}
+		}
+		return(dir);
+	}
+
+	public float calcDirOffset(Vector2 position, Block.DIR4 dir)
+	{
+		float offset = 0.0f;
+		Vector2 v = position - new Vector2 (this.transform.position.x, this.transform.position.y);
+		switch (dir) {
+		case Block.DIR4.RIGHT:
+			offset = v.x;
+			break;
+		case Block.DIR4.LEFT:
+			offset = -v.x;
+			break;
+		case Block.DIR4.UP:
+			offset = v.y;
+			break;
+		case Block.DIR4.DOWN:
+			offset = -v.y;
+			break;
+		}
+		return(offset);
+	}
+
+	public void beginSlide(Vector3 offset)
+	{
+		this.position_offset_initial = offset;
+		this.position_offset = this.position_offset_initial;
+
+		this.next_step = Block.STEP.SLIDE;
 	}
 }

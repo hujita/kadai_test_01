@@ -39,6 +39,22 @@ public class BlockRoot : MonoBehaviour {
 				}
 			//}
 		} else {
+			do {
+				BlockControl swap_target = this.getNextBlock(grabbed_block, grabbed_block.slide_dir);
+				if(swap_target == null) {
+					break;
+				}
+				if(! swap_target.isGrabbable()) {
+					break;
+				}
+				float offset = this.grabbed_block.calcDirOffset(mouse_position_xy, this.grabbed_block.slide_dir);
+				if(offset < Block.COLLISION_SIZE / 2.0f) {
+					break;
+				}
+				this.swapBlock(grabbed_block, grabbed_block.slide_dir, swap_target);
+				this.grabbed_block = null;
+			} while(false);
+
 			if (! Input.GetMouseButton (0)) {
 				this.grabbed_block.endGrab ();
 				this.grabbed_block = null;
@@ -101,5 +117,104 @@ public class BlockRoot : MonoBehaviour {
 		}
 
 		return(ret);
+	}
+
+	public BlockControl getNextBlock(BlockControl block, Block.DIR4 dir)
+	{
+		BlockControl next_block = null;
+
+		switch (dir) {
+		case Block.DIR4.RIGHT:
+			if (block.i_pos.x < Block.BLOCK_NUM_X - 1) {
+				next_block = this.blocks[block.i_pos.x + 1, block.i_pos.y];
+			}
+			break;
+		case Block.DIR4.LEFT:
+			if (block.i_pos.x > 0) {
+				next_block = this.blocks[block.i_pos.x - 1, block.i_pos.y];
+			}
+			break;
+		case Block.DIR4.UP:
+			if (block.i_pos.y < Block.BLOCK_NUM_Y - 1) {
+				next_block = this.blocks[block.i_pos.x, block.i_pos.y + 1];
+			}
+			break;
+		case Block.DIR4.DOWN:
+			if (block.i_pos.y > 0) {
+				next_block = this.blocks[block.i_pos.x, block.i_pos.y - 1];
+			}
+			break;
+		}
+		return(next_block);
+	}
+
+	public static Vector3 getDirVector(Block.DIR4 dir)
+	{
+		Vector3 v = Vector3.zero;
+
+		switch (dir) {
+		case Block.DIR4.RIGHT:
+			v = Vector3.right;
+			break;
+		case Block.DIR4.LEFT:
+			v = Vector3.left;
+			break;
+		case Block.DIR4.UP:
+			v = Vector3.up;
+			break;
+		case Block.DIR4.DOWN:
+			v = Vector3.down;
+			break;
+		}
+
+		v *= Block.COLLISION_SIZE;
+		return(v);
+	}
+
+	public static Block.DIR4 getOppositDir(Block.DIR4 dir)
+	{
+		Block.DIR4 opposit = dir;
+		switch (dir) {
+		case Block.DIR4.RIGHT:
+			opposit = Block.DIR4.LEFT;
+			break;
+		case Block.DIR4.LEFT:
+			opposit = Block.DIR4.RIGHT;
+			break;
+		case Block.DIR4.UP:
+			opposit = Block.DIR4.DOWN;
+			break;
+		case Block.DIR4.DOWN:
+			opposit = Block.DIR4.UP;
+			break;
+		}
+		return(opposit);
+	}
+
+	public void swapBlock(BlockControl block0, Block.DIR4 dir, BlockControl block1)
+	{
+		Block.COLOR color0 = block0.color;
+		Block.COLOR color1 = block1.color;
+
+		Vector3 scale0 = block0.transform.localScale;
+		Vector3 scale1 = block1.transform.localScale;
+
+		float vanish_timer0 = block0.vanish_timer;
+		float vanish_timer1 = block1.vanish_timer;
+
+		Vector3 offset0 = BlockRoot.getDirVector (dir);
+		Vector3 offset1 = BlockRoot.getDirVector (BlockRoot.getOppositDir (dir));
+
+		block0.setColor (color1);
+		block1.setColor (color0);
+
+		block0.transform.localScale = scale1;
+		block1.transform.localScale = scale0;
+
+		block0.vanish_timer = vanish_timer1;
+		block1.vanish_timer = vanish_timer0;
+
+		block0.beginSlide (offset0);
+		block1.beginSlide (offset1);
 	}
 }
