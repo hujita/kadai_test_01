@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Block {
 	public static float COLLISION_SIZE = 1.0f;
+	public static float VANISH_TIME = 3.0f;
 
 	public struct iPosition {
 		public int x;
@@ -64,6 +65,14 @@ public class BlockControl : MonoBehaviour {
 	public Block.DIR4 slide_dir = Block.DIR4.NONE;
 	public float step_timer = 0.0f;
 
+	public Material opaque_material;
+	public Material transparent_material;
+
+	private struct StepFall {
+		public float velocity;
+	}
+	private StepFall fall;
+
 	// Use this for initialization
 	void Start () {
 		this.setColor (this.color);
@@ -75,6 +84,18 @@ public class BlockControl : MonoBehaviour {
 		Vector3 mouse_position;
 		this.block_root.unprojectMousePosition (out mouse_position, Input.mousePosition);
 		Vector2 mouse_position_xy = new Vector2 (mouse_position.x, mouse_position.y);
+
+		if (this.vanish_timer >= 0.0f) {
+			this.vanish_timer -= Time.deltaTime;
+			if (this.vanish_timer < 0.0f) {
+				if (this.step != Block.STEP.SLIDE) {
+					this.vanish_timer = -1.0f;
+					this.next_step = Block.STEP.VACANT;
+				} else {
+					this.vanish_timer = 0.0f;
+				}
+			}
+		}
 
 		this.step_timer += Time.deltaTime;
 		float slide_time = 0.2f;
@@ -88,6 +109,15 @@ public class BlockControl : MonoBehaviour {
 					} else {
 						this.next_step = Block.STEP.IDLE;
 					}
+				}
+				break;
+			case Block.STEP.IDLE:
+				this.GetComponent<Renderer>().enabled = true;
+				break;
+			case Block.STEP.FALL:
+				if(this.position_offset.y <= 0.0f) {
+					this.next_step = Block.STEP.IDLE;
+					this.position_offset.y = 0.0f;
 				}
 				break;
 			}
@@ -111,6 +141,17 @@ public class BlockControl : MonoBehaviour {
 				break;
 			case Block.STEP.VACANT:
 				this.position_offset = Vector3.zero;
+				this.setVisible(false);
+				break;
+			case Block.STEP.RESPAWN:
+				int color_index = Random.Range (0, (int)Block.COLOR.NORMAL_COLOR_NUM);
+				this.setColor((Block.COLOR)color_index);
+				this.next_step = Block.STEP.IDLE;
+				break;
+
+			case Block.STEP.FALL:
+				this.setVisible(true);
+				this.fall.velocity = 0.0f;
 				break;
 			}
 			this.step_timer = 0.0f;
@@ -126,10 +167,32 @@ public class BlockControl : MonoBehaviour {
 			rate = Mathf.Sin (rate*Mathf.PI / 2.0f);
 			this.position_offset = Vector3.Lerp (this.position_offset_initial, Vector3.zero, rate);
 			break;
+		case Block.STEP.FALL:
+			this.fall.velocity += Physics.gravity.y * Time.deltaTime * 0.3f;
+			this.position_offset.y += this.fall.velocity * Time.deltaTime;
+			if(this.position_offset.y < 0.0f) {
+				this.position_offset.y = 0.0f;
+			}
+			break;
 		}
 		Vector3 position = BlockRoot.calcBlockPosition(this.i_pos) + this.position_offset;
 
 		this.transform.position = position;
+
+		this.setColor (this.color);
+		if (this.vanish_timer >= 0.0f) {
+			Color color0 = Color.Lerp (this.GetComponent<Renderer>().material.color, Color.white, 0.5f);
+			Color color1 = Color.Lerp (this.GetComponent<Renderer>().material.color, Color.black, 0.5f);
+
+			if (this.vanish_timer < Block.VANISH_TIME / 2.0f) {
+				color0.a = this.vanish_timer / (Block.VANISH_TIME / 2.0f);
+				color1.a = color0.a;
+
+				this.GetComponent<Renderer>().material = this.transparent_material;
+			}
+			float rate = 1.0f - this.vanish_timer / Block.VANISH_TIME;
+			this.GetComponent<Renderer>().material.color = Color.Lerp (color0, color1, rate);
+		}
 	}
 
 	public void setColor(Block.COLOR color) {
@@ -249,4 +312,70 @@ public class BlockControl : MonoBehaviour {
 
 		this.next_step = Block.STEP.SLIDE;
 	}
+
+	public void toVanishing()
+	{
+		this.vanish_timer = Block.VANISH_TIME;
+	}
+
+	public bool isVanishing()
+	{
+		bool is_vanishing = (this.vanish_timer > 0.0f);
+		return(is_vanishing);
+	}
+
+	public void rewindVanishTimer()
+	{
+		this.vanish_timer = Block.VANISH_TIME;
+	}
+
+	public bool isVisible()
+	{
+		bool is_visible = this.GetComponent<Renderer>().enabled;
+		return(is_visible);
+	}
+
+	public void setVisible(bool is_visible)
+	{
+		this.GetComponent<Renderer>().enabled = is_visible;
+	}
+
+	public bool isIdle()
+	{
+		bool is_idle = false;
+		if (this.step == Block.STEP.IDLE && this.next_step == Block.STEP.NONE) {
+			is_idle = true;
+		}
+		return(is_idle);
+	}
+
+	public void beginFall(BlockControl start)
+	{
+		this.next_step = Block.STEP.FALL;
+		this.position_offset.y = (float)(start.i_pos.y - this.i_pos.y) * Block.COLLISION_SIZE;
+	}
+
+	public void beginRespawn(int start_i_pos_y)
+	{
+		this.position_offset.y = (float)(start_i_pos_y - this.i_pos.y) * Block.COLLISION_SIZE;
+		this.next_step = Block.STEP.FALL;
+		int color_index = Random.Range ((int)Block.COLOR.FIRST, (int)Block.COLOR.LAST + 1);
+		this.setColor ((Block.COLOR)color_index);
+	}
+
+	public bool isVacant()
+	{
+		bool is_vacant = false;
+		if (this.step == Block.STEP.VACANT && this.next_step == Block.STEP.NONE) {
+			is_vacant = true;
+		}
+		return(is_vacant);
+	}
+
+	public bool isSliding()
+	{
+		bool is_sliding = (this.position_offset.x != 0.0f);
+		return(is_sliding);
+	}
+	
 }
