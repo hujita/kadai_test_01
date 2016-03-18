@@ -47,8 +47,8 @@ public class Block {
 		NUM,
 	};
 
-	public static int BLOCK_NUM_X = 9;
-	public static int BLOCK_NUM_Y = 9;
+	public static int BLOCK_NUM_X = 6;
+	public static int BLOCK_NUM_Y = 5;
 }
 
 public class BlockControl : MonoBehaviour {
